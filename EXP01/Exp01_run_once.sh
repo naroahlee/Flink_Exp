@@ -16,7 +16,7 @@ echo "[EXP01]: Start Flink Server"
 
 sleep 5
 
-echo "[EXP01]: Start Poisson Client(s)"
+echo "[EXP01]: Start Periodic Client"
 # ====================== CLIENT ======================
 ssh lihaoran@${CLIENT_IP} "cd ${REMOTE_DIR}; ./periodic_evl.py > /dev/null &"
 
@@ -29,7 +29,7 @@ do
 	echo "[EXP01] Periodic Client is running. Elapsed Time = [${elapsedtime} min]"
 	sleep ${sleepinterval}
 	elapsedtime=`echo ${elapsedtime} + 1 | bc`
-	checkclient=`ssh root@${CLIENT_IP} ps aux | grep -v grep | grep multi_poisson`
+	checkclient=`ssh lihaoran@${CLIENT_IP} ps aux | grep -v grep | grep periodic_evl`
 done
 echo "============================"
 

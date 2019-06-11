@@ -14,3 +14,4 @@ echo "[Environment] Ready to work."
 
 echo "[Environment] Upload Jar File."
 curl -X POST -H "Expect:" -F "jarfile=@${JAR_PATH}" http://${Flink_IP}:${Flink_PORT}/jars/upload
+echo " "

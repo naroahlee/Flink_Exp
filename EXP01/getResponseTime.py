@@ -13,6 +13,7 @@ import datetime
 FLINKVM_IP     = '192.168.1.11'
 FLINK_RESTPORT = '8081'
 JAR_FILENAME   = 'KMeans.jar'
+OUT_FILE       = 'res.csv'
 
 def getFinishedJobIDList():
 	submit_joburl = 'http://' + FLINKVM_IP + ':' + FLINK_RESTPORT + '/jobs/'
@@ -30,11 +31,23 @@ def getResponseTimeFromID(jobid):
 	
 	return duration
 
+def write_data(outfile, arrival_evt):
+	with open(outfile, 'w') as outfile:
+		for item in arrival_evt:
+			outfile.write('%d\n' % int(item))
+	return
+
 #==================== Main =====================
 
 jobidlist = getFinishedJobIDList()
-print("Job Num = [%d]\n" % (len(jobidlist)))
 
+response_time = []
 for jobid in jobidlist:
-	print getResponseTimeFromID(jobid)
+	response_time.append( getResponseTimeFromID(jobid))
+
+write_data(OUT_FILE, response_time)
+print "Data has been stored in [%s]" % (OUT_FILE)
+
+#print("Job Num = [%d]\n" % (len(jobidlist)))
+
 

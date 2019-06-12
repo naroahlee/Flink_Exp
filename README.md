@@ -4,8 +4,9 @@ We used "KMeans.jar" as workload for Flink Service.
 We used python to access REST API to control the job submission.
 We used python to retrive the completion job stats via REST API.
 
+Separating Taskexecutor and StandaloneSession to two different VCPUs (with SCHED_FIFO + Prio 95).
 
 TBD:
-	1. Separate Taskexecutor and StandaloneSession to two different VCPUs, one with partial CPU, another with full CPU.
+1. Poisson Stimulation
 
 

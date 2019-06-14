@@ -1,18 +1,28 @@
 #!/usr/bin/python
-# For M/G(DS)/1 system
-# Submit KMeans Job to Flink via REST API
 
 import sys
+import csv
+import time
 import json
 import urllib
 import urllib2
-import datetime
 
-# ================= Constants =================
+g_offset = 8000
+gcounts  = 4000
 
 FLINKVM_IP     = '192.168.1.10'
 FLINK_RESTPORT = '8081'
 JAR_FILENAME   = 'KMeans.jar'
+ARRIVAL_FILE   = 'MGDS1_flink_arrival.csv'
+
+def read_arrival_data(infile):
+	arrival_evt = []
+	with open(infile, 'rb') as csvfile:
+		myreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+		for row in myreader:
+			for item in row:
+				arrival_evt.append(float(item));
+	return arrival_evt
 
 def getUploadJarList():
 	upload_joburl = 'http://' + FLINKVM_IP + ':' + FLINK_RESTPORT + '/jars' 
@@ -46,9 +56,24 @@ if(JAR_FILENAME != jarfile['name']):
 	print "File Name: [%s]: Error!" % (jarfile['name'])
 	sys.exit(-1)
 
-# Submit Jobs 
 jarid = jarfile['id']
+
+arrival_evt = read_arrival_data(ARRIVAL_FILE)
+arrival_interval = []
+arrival_interval.append(arrival_evt[0])
+for i in range(1, len(arrival_evt)):
+	arrival_interval.append(arrival_evt[i] - arrival_evt[i-1])
+
+# =============== Start Experiment =============
+
 jobid = submitJobtoFlink(jarid)
-print jobid
+time.sleep(10)
+
+# Submit Jobs 
+for i in range(g_offset, g_offset + gcounts):
+	time.sleep(arrival_interval[i])
+	jobid = submitJobtoFlink(jarid)
+
+print "Finished!"
 
 

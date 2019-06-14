@@ -6,10 +6,10 @@ import json
 import urllib
 import urllib2
 
-gperiod = 4
+gperiod = 5
 gcounts = 2000
 
-FLINKVM_IP     = '192.168.1.11'
+FLINKVM_IP     = '192.168.1.10'
 FLINK_RESTPORT = '8081'
 JAR_FILENAME   = 'KMeans.jar'
 
